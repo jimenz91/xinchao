@@ -12,7 +12,7 @@ class DishDistribution:
     def __init__(self, request: Request) -> None:
         self.request = request
         self.diners = self.request.data['diners']
-        self.table_weight = self.diners*100
+        self.table_weight = int(self.diners*100)
 
     def distribute(self) -> Union[float, list]:
         """
@@ -23,7 +23,6 @@ class DishDistribution:
             float: the cost of the some of dishes.
             list: the list of ids of the dishes selected.
         """
-        dishes_ids = []
 
         available_dishes = Dish.objects.filter(
             rations_available__gt=0, weight__lte=self.table_weight).values(
@@ -35,20 +34,7 @@ class DishDistribution:
 
         cost = self.knapSack(self.table_weight, weights, prices, n_dishes)
 
-        if cost in prices:
-            dishes_ids.append(available_dishes.filter(price=cost)[0]['id'])
-        else:
-            for i in range(len(prices)):
-                for j in range(i+1, len(prices)):
-                    if prices[i] + prices[j] == cost:
-                        dishes_ids.append(available_dishes.filter(
-                            price=prices[i])[0]['id']
-                        )
-                        dishes_ids.append(available_dishes.filter(
-                            price=prices[j])[0]['id']
-                        )
-
-        return cost, dishes_ids
+        return cost, self.get_cost_and_ids(cost, prices, available_dishes)
 
     def knapSack(
         self,
@@ -77,3 +63,33 @@ class DishDistribution:
             return max(prices[n_dishes-1] + self.knapSack(
                 table_weight-weights[n_dishes-1], weights, prices, n_dishes-1),
                 self.knapSack(table_weight, weights, prices, n_dishes-1))
+
+    def get_cost_and_ids(self, cost, prices, available_dishes) -> list:
+        """
+        Function for obtaining the ids from the cost calculated by the 
+        knapSack.
+
+        Args:
+            cost ([type]): cost calculated.
+            prices ([type]): available prices.
+            available_dishes ([type]): available dishes.
+
+        Returns:
+            list: A list with all the ids from the cost calculated.
+        """
+
+        dishes_ids = []
+
+        if cost in prices:
+            dishes_ids.append(available_dishes.filter(price=cost)[0]['id'])
+        else:
+            for i in range(len(prices)):
+                for j in range(i+1, len(prices)):
+                    if prices[i] + prices[j] == cost:
+                        dishes_ids.append(available_dishes.filter(
+                            price=prices[i])[0]['id']
+                        )
+                        dishes_ids.append(available_dishes.filter(
+                            price=prices[j])[0]['id']
+                        )
+        return dishes_ids

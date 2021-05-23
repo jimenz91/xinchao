@@ -15,6 +15,7 @@ class TableAdmin(admin.ModelAdmin):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'diners', 'table_id', 'time')
+    list_per_page = 10
 
 
 admin.site.register(Dish, DishAdmin)

@@ -19,5 +19,5 @@ urlpatterns = [
     path('dishes/', DishListCreateAPIView.as_view(),
          name='dish-list'),
     path('dishes/<int:pk>', DishDetailAPIView.as_view(),
-         name='categoria-detail'),
+         name='dish-detail'),
 ]

@@ -139,12 +139,17 @@ class OrderListCreateAPIView(APIView):
         Returns:
             Response: HttpResponse with the instance created.
         """
-        cost, dishes = DishDistribution(request).distribute()
-        request.data['dishes'] = dishes
+        cost, dishes_id = DishDistribution(request).distribute()
+        request.data['dishes'] = dishes_id
         request.data['cost'] = cost
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            for id in dishes_id:
+                dish = Dish.objects.filter(id=id).first()
+                current_rations = dish.rations_available - 1
+                dish.rations_available = current_rations
+                dish.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

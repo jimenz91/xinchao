@@ -1,3 +1,19 @@
 from django.test import TestCase
 
-# Create your tests here.
+
+class TestOrdersAPI(TestCase):
+    """
+    Test the Orders API.
+    """
+
+
+class TestTablesAPI(TestCase):
+    """
+    Test the Tables API.
+    """
+
+
+class TestDishesAPI(TestCase):
+    """
+    Test the Dishes API.
+    """

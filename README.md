@@ -75,3 +75,12 @@ http://127.0.0.1:8000/menu/model_name/filtered    supports GET method
 ```
 
 "model_name" refers to the name of the moodel (or database table) that you want to consume. Since they are consumed dynamically, it can either be "dish", "table" or "order". The second endpoint works the same, although with an "id" which refers to the identifier (an integer) of a specific instance of a model in the database. The third endpoint retrieves items from the model by passing the filters as path parameters.
+
+## Test execution
+
+In order to execute the unit tests for the main functionality of the application "coverage" is used. Type the following commands on the terminal to get a detail report.
+
+```
+coverage run --source='.' manage.py test
+coverage report
+```

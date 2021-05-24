@@ -55,6 +55,18 @@ class TestOrdersAPI(TestCase):
         response = self.client.delete(ORDER_DETAIL_URL)
         self.assertEqual(response.status_code, 204)
 
+    def test_create_invalid_order(self):
+        payload = {'diners': 0}
+        response = self.client.post(ORDER_LIST_URL, payload, format="json")
+        self.assertEqual(response.status_code, 400)
+
+    def test_update_order(self):
+        payload = {'diners': 2, 'table_id': 3, 'dishes': [1]}
+        response = self.client.put(ORDER_DETAIL_URL, payload, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['diners'], payload['diners'])
+        self.assertEqual(response.data['table_id'], payload['table_id'])
+
 
 class TestTablesAPI(TestCase):
     """
@@ -86,6 +98,14 @@ class TestTablesAPI(TestCase):
     def test_delete_table(self):
         response = self.client.delete(TABLE_DETAIL_URL)
         self.assertEqual(response.status_code, 204)
+
+    def test_update_table(self):
+        payload = {'availability': True}
+        response = self.client.put(
+            TABLE_DETAIL_URL, payload=payload, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.data['availability'], payload['availability'])
 
 
 class TestDishesAPI(TestCase):
@@ -124,3 +144,17 @@ class TestDishesAPI(TestCase):
     def test_delete_dish(self):
         response = self.client.delete(DISH_DETAIL_URL)
         self.assertEqual(response.status_code, 204)
+
+    def test_create_invalid_dish(self):
+        payload = {"name": None}
+        response = self.client.post(DISH_LIST_URL, payload, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_update_dish(self):
+        payload = {"name": "New name",
+                   "price": 20000.0,
+                   "weight": 100.0,
+                   "rations_available": 2}
+        response = self.client.put(DISH_DETAIL_URL, payload, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['name'], payload['name'])

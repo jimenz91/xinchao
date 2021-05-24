@@ -5,7 +5,7 @@ branch = True
 [report]
 ignore_errors = True
 show_missing = True
-fail_under = 60
+fail_under = 80
 # File patterns to omit
 omit =
     */*setup.py

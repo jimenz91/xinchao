@@ -66,7 +66,7 @@ class DishDistribution:
 
     def get_cost_and_ids(self, cost, prices, available_dishes) -> list:
         """
-        Function for obtaining the ids from the cost calculated by the 
+        Function for obtaining the ids from the cost calculated by the
         knapSack.
 
         Args:

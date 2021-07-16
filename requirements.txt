@@ -12,3 +12,5 @@ sqlparse==0.4.1
 toml==0.10.2
 coverage
 virtualenv
+python-dotenv
+psycopg2

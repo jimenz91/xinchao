@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    container_name: xinchao
+    restart: always
+    command: >
+      bash -c "python manage.py runserver 0.0.0.0:8080"
+    volumes:
+      - .:/xinchao
+    ports:
+      - "8080:8080"
+    networks:
+      - back
+    depends_on:
+      - xinchao_db
+    links:
+      - xinchao_db:xinchao_db
+
+  xinchao_db:
+    image: postgres
+    container_name: xinchao_db
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432"
+    networks:
+      - back
+
+networks:
+  back:
